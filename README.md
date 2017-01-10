@@ -1,5 +1,7 @@
 # Tourist
 
+![tourist](./public/screenshot.png)
+
 ## TODO
 
 * [ ] 支援多次上傳
