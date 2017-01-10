@@ -14,8 +14,6 @@
         dz.classList.remove('dragging')
         event.preventDefault()
 
-
-
         let files    = event.dataTransfer.files
         var promises = []
 

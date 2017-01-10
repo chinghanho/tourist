@@ -8,6 +8,9 @@
         this.elem = document.getElementById('gallery')
         this.template = document.getElementById('template-gallery-item')
 
+        // default
+        this.resizeWidth = 680
+
         // declares
         this.photos = []
 
@@ -23,20 +26,56 @@
         }
 
         var photos = Array.isArray(files) ? files : [files]
-        photos.forEach(function (photo) {
+        photos.forEach(function (photo, index) {
+
             let clone = document.importNode(that.template.content, true)
-            let imgtag = clone.querySelectorAll('img')
+            let imgtag = clone.querySelectorAll('img')[0]
             let reader = new FileReader()
 
-            reader.onload = function (event) {
-                imgtag[0].src = event.target.result
+            that.elem.appendChild(clone)
+
+            reader.onload = function () {
+                that._createThumb(reader.result, function (thumb) {
+                    imgtag.width  = thumb.width
+                    imgtag.setAttribute('data-origin-url', reader.result)
+                    imgtag.src = thumb.url
+                })
             }
 
             reader.readAsDataURL(photo)
 
-            that.elem.appendChild(clone)
             that.photos.push(photo)
         })
+    }
+
+    Gallery.prototype._createThumb = function (imageURL, callback) {
+        let that = this
+        let img = new Image()
+
+        img.onload = function () {
+            let canvas = document.createElement('canvas')
+            let ctx = canvas.getContext('2d')
+            let delta = (that.resizeWidth / img.width)
+
+            canvas.width  = img.width * delta
+            canvas.height = img.height * delta
+
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+
+            let thumbDataURL = canvas.toDataURL('image/png')
+
+            let thumb = {
+                url: thumbDataURL,
+                width: canvas.width,
+                height: canvas.height
+            }
+
+            if (callback) {
+                callback(thumb)
+            }
+        }
+
+        img.src = imageURL
     }
 
 
