@@ -35,10 +35,10 @@
             that.elem.appendChild(clone)
 
             reader.onload = function () {
-                that._createThumb(reader.result, function (thumb) {
-                    imgtag.width  = thumb.width
+                that._createThumb(reader.result, function (image) {
+                    imgtag.width  = image.thumb.width
                     imgtag.setAttribute('data-origin-url', reader.result)
-                    imgtag.src = thumb.url
+                    imgtag.src = image.thumb.url
                 })
             }
 
@@ -64,14 +64,14 @@
 
             let thumbDataURL = canvas.toDataURL('image/png')
 
-            let thumb = {
+            img.thumb = {
                 url: thumbDataURL,
                 width: canvas.width,
                 height: canvas.height
             }
 
             if (callback) {
-                callback(thumb)
+                callback(img)
             }
         }
 
