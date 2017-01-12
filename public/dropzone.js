@@ -28,6 +28,8 @@
 
             Gallery.add(files)
 
+            var markers = L.markerClusterGroup()
+
             let bounds = files.reduce(function (bounds, file, index) {
 
                 let exifdata = file.exifdata
@@ -52,17 +54,15 @@
 
                 bounds.push([lat, lng])
 
-                let latLng = Mapper.latLng(lat, lng)
-                Mapper.add(latLng)
+                let marker = Mapper.mark(Mapper.latLng(lat, lng))
+                markers.addLayer(marker)
 
                 return bounds
             }, [])
 
+            Mapper.map.addLayer(markers);
             Mapper.fit(bounds)
         })
-
-
-
 
         Mapper.addControl('topright')
         dz.style.display = 'none'

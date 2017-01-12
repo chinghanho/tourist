@@ -38,9 +38,10 @@
     }
 
 
-    Mapper.prototype.latLng = function (lat, lng) {
-        return L.latLng(lat, lng)
-    }
+    // doc: http://leafletjs.com/reference.html#latlng
+    Mapper.prototype.latLng = L.latLng
+
+    Mapper.prototype.mark = L.marker
 
     Mapper.prototype.add = function (latLng) {
         L.marker(latLng).addTo(this.map)
