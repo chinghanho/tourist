@@ -47,7 +47,9 @@
     }
 
     Mapper.prototype.fit = function (bounds) {
-        this.map.fitBounds(bounds)
+        this.map.fitBounds(bounds, {
+            paddingTopLeft: [390, 25]
+        })
     }
 
     Mapper.prototype.addControl = function (position) {
