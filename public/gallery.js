@@ -26,7 +26,7 @@
 
         var photos = Array.isArray(files) ? files : [files]
 
-        photos.forEach(function (photo) {
+        async.eachOfSeries(photos, function (photo, index, next) {
 
             let clone = document.importNode(that.template.content, true)
             let imgtag = clone.querySelectorAll('img')[0]
@@ -39,12 +39,14 @@
                     imgtag.width  = image.thumb.width
                     imgtag.setAttribute('data-origin-url', reader.result)
                     imgtag.src = image.thumb.url
+                    next()
                 })
             }
 
             reader.readAsDataURL(photo)
 
             that.photos.push(photo)
+
         })
     }
 
