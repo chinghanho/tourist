@@ -21,12 +21,12 @@
         let that = this
 
         if (that.photos.length === 0) {
-            that.elem.classList.remove('empty')
-            that.elem.textContent = ""
+            that.show()
         }
 
         var photos = Array.isArray(files) ? files : [files]
-        photos.forEach(function (photo, index) {
+
+        photos.forEach(function (photo) {
 
             let clone = document.importNode(that.template.content, true)
             let imgtag = clone.querySelectorAll('img')[0]
@@ -35,10 +35,10 @@
             that.elem.appendChild(clone)
 
             reader.onload = function () {
-                that._createThumb(reader.result, function (thumb) {
-                    imgtag.width  = thumb.width
+                that._createThumb(reader.result, function (image) {
+                    imgtag.width  = image.thumb.width
                     imgtag.setAttribute('data-origin-url', reader.result)
-                    imgtag.src = thumb.url
+                    imgtag.src = image.thumb.url
                 })
             }
 
@@ -47,6 +47,12 @@
             that.photos.push(photo)
         })
     }
+
+
+    Gallery.prototype.show = function () {
+        this.elem.classList.remove('empty')
+    }
+
 
     Gallery.prototype._createThumb = function (imageURL, callback) {
         let that = this
@@ -64,14 +70,14 @@
 
             let thumbDataURL = canvas.toDataURL('image/png')
 
-            let thumb = {
+            img.thumb = {
                 url: thumbDataURL,
                 width: canvas.width,
                 height: canvas.height
             }
 
             if (callback) {
-                callback(thumb)
+                callback(img)
             }
         }
 
