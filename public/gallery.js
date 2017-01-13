@@ -12,42 +12,44 @@
         this.resizeWidth = 680
 
         // declares
-        this.photos = []
+        this.files = []
 
     }
 
 
     Gallery.prototype.add = function (files) {
-        let that = this
-
-        if (that.photos.length === 0) {
-            that.show()
+        if (this.files.length === 0) {
+            this.show()
         }
 
-        var photos = Array.isArray(files) ? files : [files]
+        var files = Array.isArray(files) ? files : [files]
+        files.forEach(this._addFile.bind(this))
+        async.eachOfSeries(files, this._asyncReadFile.bind(this))
+    }
 
-        async.eachOfSeries(photos, function (photo, index, next) {
 
-            let clone = document.importNode(that.template.content, true)
-            let imgtag = clone.querySelectorAll('img')[0]
-            let reader = new FileReader()
+    Gallery.prototype._addFile = function (file) {
+        let clone  = document.importNode(this.template.content, true)
+        this.elem.appendChild(clone)
+        file.elem  = this.elem.lastElementChild
+        this.files.push(file)
+    }
 
-            that.elem.appendChild(clone)
 
-            reader.onload = function () {
-                that._createThumb(reader.result, function (image) {
-                    imgtag.width  = image.thumb.width
-                    imgtag.setAttribute('data-origin-url', reader.result)
-                    imgtag.src = image.thumb.url
-                    next()
-                })
-            }
+    Gallery.prototype._asyncReadFile = function (file, index, next) {
+        let reader = new FileReader()
 
-            reader.readAsDataURL(photo)
+        reader.onload = () => {
+            this._createThumb(reader.result, function (image) {
+                let imgtag = file.elem.querySelectorAll('img')[0]
+                imgtag.width  = image.thumb.width
+                imgtag.setAttribute('data-origin-url', reader.result)
+                imgtag.src = image.thumb.url
+                next()
+            })
+        }
 
-            that.photos.push(photo)
-
-        })
+        reader.readAsDataURL(file)
     }
 
 
