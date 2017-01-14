@@ -63,10 +63,10 @@ html {
   top: 25px;
   bottom: 25px;
   left: 25px;
-  width: 340px;
+  width: 170px;
   z-index: 1500;
   background-color: hsla(0, 0%, 13%, 0.8);
-  padding: 4px;
+  padding: 2px;
   overflow-y: scroll;
   will-change: transform;
 }
@@ -81,7 +81,7 @@ html {
 
 .gallery-item {
   overflow: hidden;
-  margin-bottom: 4px;
+  padding: 2px;
   float: left;
   width: 100%;
 }

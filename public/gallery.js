@@ -9,7 +9,7 @@
         this.template = document.getElementById('template-gallery-item')
 
         // default
-        this.resizeWidth = 680
+        this.resizeWidth = 340
 
         // declares
         this.files = []
