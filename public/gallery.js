@@ -14,6 +14,27 @@
         // declares
         this.files = []
 
+        this.elem.addEventListener('mouseover', function (event) {
+
+            let fromElem = event.relatedTarget
+            let target = event.target
+
+            if (target.matches('.gallery-item') && !fromElem) {
+                return console.log('here')
+            }
+
+            if (target.matches('.gallery-item') && (fromElem.contains(target))) {
+                return console.log('mouseenter')
+            }
+
+            if (fromElem.matches('.gallery-item') && (target.contains(fromElem))) {
+                return console.log('mouseout')
+            }
+
+            if (target.matches('.gallery-item') && fromElem.matches('.gallery-item') && !target.isSameNode(fromElem)) {
+                return console.log('changed')
+            }
+        })
     }
 
 
@@ -55,6 +76,11 @@
 
     Gallery.prototype.show = function () {
         this.elem.classList.remove('empty')
+    }
+
+
+    Gallery.prototype.showInfo = function () {
+        //
     }
 
 
