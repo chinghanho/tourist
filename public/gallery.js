@@ -14,27 +14,7 @@
         // declares
         this.files = []
 
-        this.elem.addEventListener('mouseover', function (event) {
-
-            let fromElem = event.relatedTarget
-            let target = event.target
-
-            if (target.matches('.gallery-item') && !fromElem) {
-                return console.log('here')
-            }
-
-            if (target.matches('.gallery-item') && (fromElem.contains(target))) {
-                return console.log('mouseenter')
-            }
-
-            if (fromElem.matches('.gallery-item') && (target.contains(fromElem))) {
-                return console.log('mouseout')
-            }
-
-            if (target.matches('.gallery-item') && fromElem.matches('.gallery-item') && !target.isSameNode(fromElem)) {
-                return console.log('changed')
-            }
-        })
+        this.mouseenter(this.elem, '.gallery-item', this.showInfo)
     }
 
 
@@ -79,8 +59,26 @@
     }
 
 
-    Gallery.prototype.showInfo = function () {
-        //
+    Gallery.prototype.mouseenter = function (elem, selector, handler) {
+
+        let that = this
+
+        elem.addEventListener('mouseover', function onMouseover(event) {
+
+            let fromElem = event.relatedTarget
+            let target = event.target
+            let nodes = that._closest(target, selector, elem)
+
+            if (nodes.length > 0) {
+                handler.call(this, nodes)
+            }
+        })
+
+    }
+
+
+    Gallery.prototype.showInfo = function (nodes) {
+        debugger
     }
 
 
@@ -112,6 +110,41 @@
         }
 
         img.src = imageURL
+    }
+
+
+    Gallery.prototype._isDocument = function (obj) {
+        return obj != null && obj.nodeType == obj.DOCUMENT_NODE
+    }
+
+
+    Gallery.prototype._closest = function (node, selector, context) {
+
+        let nodes = []
+        let collection = (context || document).querySelectorAll(selector)
+
+        while (node && !(collection ? [].indexOf.call(collection, node) >= 0 : this._matches(node, selector))) {
+            node = !this._isDocument(node) && node.parentNode
+        }
+
+        if (node && nodes.indexOf(node) < 0){
+            nodes.push(node)
+        }
+
+        return nodes
+    }
+
+
+    // polyfill matches
+    Gallery.prototype._matches = function (elem, selector) {
+
+        let matches = elem.matches ||
+                      elem.webkitMatchesSelector ||
+                      elem.mozMatchesSelector ||
+                      elem.oMatchesSelector ||
+                      elem.matchesSelector
+
+        return matches(selector)
     }
 
 
