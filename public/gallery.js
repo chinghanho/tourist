@@ -73,7 +73,7 @@
         elem.addEventListener(eventType, function (event) {
             let nodes = that._closest(event.target, selector, elem)
             if (nodes.length > 0) {
-                handler.call(this, nodes)
+                handler.call(that, event, nodes)
             }
         })
 
@@ -81,8 +81,25 @@
     }
 
 
-    Gallery.prototype._showInfo = function (nodes) {
-        debugger
+    Gallery.prototype._showInfo = function (event, nodes) {
+        let selected = this.files.filter((file) => { return file.elem === nodes[0] })
+
+        if (selected.length > 0) {
+            let file = selected[0]
+
+            let fNumber         = file.exifdata['FNumber'].valueOf()
+            let focalLength     = file.exifdata['FocalLength'].valueOf()
+            let model           = file.exifdata['Model'].valueOf()
+            let isoSpeedRatings = file.exifdata['ISOSpeedRatings'].valueOf()
+            let exposureTime    = file.exifdata['ExposureTime']
+            exposureTime        = [exposureTime.numerator, exposureTime.denominator].join('/')
+
+            console.log('Model',           model)
+            console.log('ISOSpeedRatings', isoSpeedRatings)
+            console.log('FNumber',         fNumber)
+            console.log('FocalLength',     focalLength)
+            console.log('ExposureTime',    exposureTime)
+        }
     }
 
 
