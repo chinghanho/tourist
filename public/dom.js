@@ -4,6 +4,39 @@
 
     var DOM = {}
 
+
+    DOM.closest = function (node, selector, context) {
+
+        let nodes = []
+        let collection = (context || document).querySelectorAll(selector)
+
+        while (node && !(collection ? [].indexOf.call(collection, node) >= 0 : DOM._matches(node, selector))) {
+            node = !DOM._isDocument(node) && node.parentNode
+        }
+
+        if (node && nodes.indexOf(node) < 0){
+            nodes.push(node)
+        }
+
+        return nodes
+    }
+
+
+    DOM.delegate = function (elem, selector, type, handler) {
+
+        let eventType = this._eventFix(type)
+
+        elem.addEventListener(eventType, (event) => {
+            let nodes = DOM.closest(event.target, selector, elem)
+            if (nodes.length > 0) {
+                handler.call(this, event, nodes)
+            }
+        })
+
+        return this
+    }
+
+
     DOM._isDocument = function (obj) {
         return obj != null && obj.nodeType == obj.DOCUMENT_NODE
     }
@@ -22,20 +55,14 @@
     }
 
 
-    DOM.closest = function (node, selector, context) {
+    DOM._eventFix = function (type) {
 
-        let nodes = []
-        let collection = (context || document).querySelectorAll(selector)
-
-        while (node && !(collection ? [].indexOf.call(collection, node) >= 0 : DOM._matches(node, selector))) {
-            node = !DOM._isDocument(node) && node.parentNode
+        let events = {
+            'mouseenter': 'mouseover'
         }
 
-        if (node && nodes.indexOf(node) < 0){
-            nodes.push(node)
-        }
+        return events[type] || type
 
-        return nodes
     }
 
 

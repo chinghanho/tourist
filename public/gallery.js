@@ -15,8 +15,10 @@
         // declares
         this.files = []
 
-        this.delegate(this.elem, '.gallery-item', 'mouseenter', this._noob)
-            .delegate(this.elem, '.gallery-item', 'click', this._showInfo)
+        DOM.delegate(this.elem, '.gallery-item', 'mouseenter', this._noob.bind(this))
+           .delegate(this.elem, '.gallery-item', 'click', this._showInfo.bind(this))
+
+       return this
     }
 
 
@@ -67,22 +69,6 @@
     }
 
 
-    Gallery.prototype.delegate = function (elem, selector, type, handler) {
-
-        let that = this
-        let eventType = this._eventFix(type)
-
-        elem.addEventListener(eventType, function (event) {
-            let nodes = DOM.closest(event.target, selector, elem)
-            if (nodes.length > 0) {
-                handler.call(that, event, nodes)
-            }
-        })
-
-        return this
-    }
-
-
     Gallery.prototype._showInfo = function (event, nodes) {
         let selected = this.files.filter((file) => { return file.elem === nodes[0] })
 
@@ -107,17 +93,6 @@
 
     Gallery.prototype._noob = function () {
         return undefined
-    }
-
-
-    Gallery.prototype._eventFix = function (type) {
-
-        let events = {
-            'mouseenter': 'mouseover'
-        }
-
-        return events[type] || type
-
     }
 
 
