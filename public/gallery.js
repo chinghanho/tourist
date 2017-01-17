@@ -10,6 +10,7 @@
 
         // default
         this.resizeWidth = 340
+        this.debug = false
 
         // declares
         this.files = []
@@ -27,7 +28,7 @@
         var files = Array.isArray(files) ? files : [files]
         files.forEach(this._addFile.bind(this))
         async.eachOfSeries(files, this._asyncReadFile.bind(this), function () {
-            if (window.env === 'development') {
+            if (that.debug && window.env === 'development') {
                 console.timeEnd('處理照片')
             }
         })
@@ -44,7 +45,7 @@
 
     Gallery.prototype._asyncReadFile = function (file, index, next) {
 
-        if (index === 0 && window.env === 'development') {
+        if (that.debug && index === 0 && window.env === 'development') {
             console.time('處理照片')
         }
 

@@ -3,16 +3,39 @@
 
     'use strict'
 
-    var dz = document.getElementById('dropzone')
 
-    window.addEventListener('dragover', function onDragOver(event) {
-        dz.style.display = 'flex'
-        event.preventDefault()
-    })
+    function Dropzone() {
 
-    window.addEventListener('drop', function onDrop(event) {
-        dz.classList.remove('dragging')
+        let that = this
+
+        this.debug = true
+
+        this.dz = document.getElementById('dropzone')
+
+
+        window.addEventListener('dragover', this._onDragOver.bind(this))
+        window.addEventListener('drop', this._onDrop.bind(this))
+        this.dz.addEventListener('dragenter', this._onDragEnter.bind(this))
+        this.dz.addEventListener('dragleave', this._onDragLeave.bind(this))
+    }
+
+
+    Dropzone.prototype._onDragOver = function (event) {
+        this.dz.style.display = 'flex'
         event.preventDefault()
+    }
+
+
+    Dropzone.prototype._onDrop = function (event) {
+
+        let that = this
+
+        that.dz.classList.remove('dragging')
+        event.preventDefault()
+
+        if (that.debug && window.env === 'development') {
+            console.time('處理 EXIF 時間')
+        }
 
         let files    = event.dataTransfer.files
         var promises = []
@@ -26,7 +49,9 @@
 
         Promise.all(promises).then(function (files) {
 
-            Gallery.add(files)
+            if (that.debug && window.env === 'development') {
+                console.timeEnd('處理 EXIF 時間')
+            }
 
             var markers = L.markerClusterGroup()
 
@@ -65,17 +90,22 @@
         })
 
         Mapper.addControl('topright')
-        dz.style.display = 'none'
-    })
+        this.dz.style.display = 'none'
+    }
 
 
-    dz.addEventListener('dragenter', function () {
-        dz.classList.add('dragging')
-    })
+    Dropzone.prototype._onDragEnter = function () {
+        this.dz.classList.add('dragging')
+    }
 
 
-    dz.addEventListener('dragleave', function () {
-        dz.classList.remove('dragging')
-    })
+    Dropzone.prototype._onDragLeave = function () {
+        this.dz.classList.remove('dragging')
+    }
+
+
+
+    window.Dropzone = new Dropzone()
+
 
 })()
