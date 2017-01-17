@@ -75,17 +75,20 @@
         if (selected.length > 0) {
             let file = selected[0]
 
-            let fNumber         = file.exifdata['FNumber'].valueOf()
-            let focalLength     = file.exifdata['FocalLength'].valueOf()
-            let model           = file.exifdata['Model'].valueOf()
-            let isoSpeedRatings = file.exifdata['ISOSpeedRatings'].valueOf()
-            let exposureTime    = file.exifdata['ExposureTime']
+            var {
+                FNumber:         fNumber,
+                FocalLength:     focalLength,
+                Model:           model,
+                ISOSpeedRatings: isoSpeedRatings,
+                ExposureTime:    exposureTime,
+            } = file.exifdata
+
             exposureTime        = [exposureTime.numerator, exposureTime.denominator].join('/')
 
             console.log('Model',           model)
             console.log('ISOSpeedRatings', isoSpeedRatings)
-            console.log('FNumber',         fNumber)
-            console.log('FocalLength',     focalLength)
+            console.log('FNumber',         fNumber.valueOf())
+            console.log('FocalLength',     focalLength.valueOf())
             console.log('ExposureTime',    exposureTime)
         }
     }
