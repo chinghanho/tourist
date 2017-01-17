@@ -21,14 +21,15 @@
 
 
     Gallery.prototype.add = function (files) {
+
         if (this.files.length === 0) {
             this.show()
         }
 
         var files = Array.isArray(files) ? files : [files]
         files.forEach(this._addFile.bind(this))
-        async.eachOfSeries(files, this._asyncReadFile.bind(this), function () {
-            if (that.debug && window.env === 'development') {
+        async.eachOfSeries(files, this._asyncReadFile.bind(this), () => {
+            if (this.debug && window.env === 'development') {
                 console.timeEnd('處理照片')
             }
         })
@@ -45,7 +46,7 @@
 
     Gallery.prototype._asyncReadFile = function (file, index, next) {
 
-        if (that.debug && index === 0 && window.env === 'development') {
+        if (this.debug && index === 0 && window.env === 'development') {
             console.time('處理照片')
         }
 
@@ -72,7 +73,7 @@
         let eventType = this._eventFix(type)
 
         elem.addEventListener(eventType, function (event) {
-            let nodes = that._closest(event.target, selector, elem)
+            let nodes = DOM.closest(event.target, selector, elem)
             if (nodes.length > 0) {
                 handler.call(that, event, nodes)
             }
@@ -106,41 +107,6 @@
 
     Gallery.prototype._noob = function () {
         return undefined
-    }
-
-
-    Gallery.prototype._isDocument = function (obj) {
-        return obj != null && obj.nodeType == obj.DOCUMENT_NODE
-    }
-
-
-    Gallery.prototype._closest = function (node, selector, context) {
-
-        let nodes = []
-        let collection = (context || document).querySelectorAll(selector)
-
-        while (node && !(collection ? [].indexOf.call(collection, node) >= 0 : this._matches(node, selector))) {
-            node = !this._isDocument(node) && node.parentNode
-        }
-
-        if (node && nodes.indexOf(node) < 0){
-            nodes.push(node)
-        }
-
-        return nodes
-    }
-
-
-    // polyfill matches
-    Gallery.prototype._matches = function (elem, selector) {
-
-        let matches = elem.matches ||
-                      elem.webkitMatchesSelector ||
-                      elem.mozMatchesSelector ||
-                      elem.oMatchesSelector ||
-                      elem.matchesSelector
-
-        return matches(selector)
     }
 
 
