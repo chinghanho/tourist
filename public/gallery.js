@@ -49,7 +49,6 @@
         }
 
         let image = new Image()
-        let that = this
 
         image.onload = function () {
             let imgtag = file.elem.querySelectorAll('img')[0]
