@@ -26,7 +26,11 @@
 
         var files = Array.isArray(files) ? files : [files]
         files.forEach(this._addFile.bind(this))
-        async.eachOfSeries(files, this._asyncReadFile.bind(this))
+        async.eachOfSeries(files, this._asyncReadFile.bind(this), function () {
+            if (window.env === 'development') {
+                console.timeEnd('處理照片')
+            }
+        })
     }
 
 
@@ -39,19 +43,21 @@
 
 
     Gallery.prototype._asyncReadFile = function (file, index, next) {
-        let reader = new FileReader()
 
-        reader.onload = () => {
-            this._createThumb(reader.result, function (image) {
-                let imgtag = file.elem.querySelectorAll('img')[0]
-                imgtag.width  = image.thumb.width
-                imgtag.setAttribute('data-origin-url', reader.result)
-                imgtag.src = image.thumb.url
-                next()
-            })
+        if (index === 0 && window.env === 'development') {
+            console.time('處理照片')
         }
 
-        reader.readAsDataURL(file)
+        let image = new Image()
+        let that = this
+
+        image.onload = function () {
+            let imgtag = file.elem.querySelectorAll('img')[0]
+            imgtag.src = this.src
+            next()
+        }
+
+        image.src = window.URL.createObjectURL(file)
     }
 
 
@@ -83,37 +89,6 @@
 
     Gallery.prototype._noob = function () {
         return undefined
-    }
-
-
-    Gallery.prototype._createThumb = function (imageURL, callback) {
-        let that = this
-        let img = new Image()
-
-        img.onload = function () {
-            let canvas = document.createElement('canvas')
-            let ctx = canvas.getContext('2d')
-            let delta = (that.resizeWidth / img.width)
-
-            canvas.width  = img.width * delta
-            canvas.height = img.height * delta
-
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-
-            let thumbDataURL = canvas.toDataURL('image/png')
-
-            img.thumb = {
-                url: thumbDataURL,
-                width: canvas.width,
-                height: canvas.height
-            }
-
-            if (callback) {
-                callback(img)
-            }
-        }
-
-        img.src = imageURL
     }
 
 
