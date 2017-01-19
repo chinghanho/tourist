@@ -44,6 +44,7 @@
             let promise = new Promise(function (resolve, reject) {
                 EXIF.getData(files[i], resolve)
             })
+            promise.then(Gallery.add.bind(Gallery))
             promises.push(promise)
         }
 
