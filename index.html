@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>Map Sandbox</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link rel="stylesheet" href="./css/leaflet.css" />
+  <link rel="stylesheet" href="./css/marker-cluster.css" />
+  <link rel="stylesheet" href="./css/marker-cluster.default.css" />
+  <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+
+  <div id="dropzone">拖移照片到這上面來</div>
+  <div id="mapper"></div>
+  <div id="gallery" class="empty"></div>
+
+  <template id="template-gallery-item">
+    <div class="gallery-item">
+      <div class="img-wrapper">
+        <img src="" alt="" class="img-responsive">
+      </div>
+    </div>
+  </template>
+
+  <script>
+    window.env = "development"
+  </script>
+
+  <script src="./javascript/leaflet.js"></script>
+  <script src="./javascript/leaflet.markercluster.js"></script>
+  <script src="./javascript/async.js"></script>
+
+  <script src="./javascript/dom.js"></script>
+  <script src="./javascript/exif.js"></script>
+  <script src="./javascript/mapper.js"></script>
+  <script src="./javascript/gallery.js"></script>
+  <script src="./javascript/dropzone.js"></script>
+
+</body>
+</html>
