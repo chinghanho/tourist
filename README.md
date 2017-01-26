@@ -1,6 +1,6 @@
 # Tourist
 
-![tourist](./public/screenshot.png)
+![tourist](./screenshot.png)
 
 ## TODO
 
